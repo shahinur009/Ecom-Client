@@ -41,7 +41,7 @@ function Banner() {
   }, [banners]);
 
   return (
-    <div className="relative pt-20">
+    <div className="relative pt-24">
       {loading && <p>Loading banners...</p>}
       {error && <p className="text-red-500">{error}</p>}
       {!loading && !error && banners.length === 0 && (
@@ -66,7 +66,7 @@ function Banner() {
               <SwiperSlide key={banner._id}>
                 <div className="w-full">
                   <img
-                    className="w-full md:h-[500px] h-[300px]"
+                    className="w-full md:h-[400px] h-[300px]"
                     src={banner.bannerImage} // Ensure correct property name
                     alt="Banner"
                   />

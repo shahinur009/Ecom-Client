@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import bg from "../../../public/Login-background.jpg";
-import logo from "../../../public/sweetpencilbdlogo.png";
+import logo from "../../../public/logo.png";
 import { FaSpinner } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";

@@ -9,24 +9,19 @@ import VideoGallery from "./VideoGallery/VideoGallery";
 import Testimonial from "./Testomonial/Testomonial";
 import Pricing from "./Pricsing/Pricsing";
 import Rules from "./Rules/Rules";
+import Category from "../../Compponets/Category";
 // import SEO from "../../SEO/SEO";
 
 function Home() {
   return (
-    <>
- 
+    <> 
       <div>
         <Banner></Banner>
-        <Rules></Rules>
-        {/* <Category></Category> */}
+        
+        <Category></Category>
         <ProductsPage></ProductsPage>
-        <Gallery />
-        <WhyChoiceUs></WhyChoiceUs>
-        {/*<Videos></Videos> */}
-        <VideoGallery></VideoGallery>
-        <Testimonial></Testimonial>
-        <Pricing></Pricing>
-        <FAQ></FAQ>
+
+        <Rules></Rules>
       </div>
     </>
   );

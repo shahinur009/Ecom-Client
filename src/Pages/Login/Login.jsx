@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import bg from "../../../public/Login-background.jpg";
-import logo from "../../../public/sweetpencilbdlogo.png";
+import bg from "../../../public/bg-3.jpg";
+import logo from "../../../public/logo.png";
 import { FaHome, FaSpinner } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -53,9 +53,9 @@ function Login() {
   return (
     <div
       style={{ backgroundImage: `url(${bg})` }}
-      className="bg-cover bg-center min-h-screen w-full"
+      className="bg-cover bg-center min-h-screen  py-24"
     >
-      <div className="w-full max-w-xl p-4 rounded-xl bg-white shadow-md mx-auto">
+      <div className="w-full max-w-md p-4 rounded-xl bg-white shadow-md mx-auto">
         <Link
           to="/"
           className="bg-yellow-500 rounded-full w-12 h-12 flex justify-center items-center"

@@ -1,45 +1,43 @@
 import React, { useState } from "react";
 import { CiSearch } from "react-icons/ci";
-import logo from "../../public/new-image/logo.png";
+import logo from "../../public/logo.png";
 import { PiShoppingCartSimpleBold } from "react-icons/pi";
 import { FaBars } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 function Navbar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // State for hamburger menu
+  const [isMenuOpen, setIsMenuOpen] = useState(false); 
 
   return (
     <>
-      <div className="flex items-center justify-between shadow-md bg-[#ededca] px-2 py-2 fixed z-50 right-0 left-0 h-20 md:h-24">
+      <div className="flex bg-[#74CDF5] items-center container mx-auto justify-between p-1 fixed z-50 right-0 left-0 h-20 md:h-20">
         {/* Logo Section */}
         <Link to="/" className="flex items-center">
-          <img src={logo} alt="logo" className="w-28 h-28 md:w-44 md:h-40" />
-          <span className="text-black font-bold text-sm md:text-xl">
-            Sweet PencilBD
-          </span>
+          <img src={logo} alt="logo" className="w-40 h-24" />
+          
         </Link>
 
         {/* Search Bar Section */}
-        {/* <div className="hidden md:flex items-center flex-grow max-w-[70%] mx-4">
+        <div className="hidden md:flex items-center flex-grow max-w-sm mx-4 border rounded-md">
           <div className="relative flex items-center w-full">
             <input
               type="search"
               name="Search"
-              placeholder="Search what you want"
-              className="w-full py-2 pl-10 text-sm md:text-xl rounded-l-md focus:outline-none dark:bg-gray-100 dark:text-gray-800 focus:dark:bg-gray-50 focus:dark:border-violet-600"
+              placeholder="Search........"
+              className="w-full py-3 px-3 text-sm rounded-l-md focus:outline-none dark:bg-gray-100 dark:text-gray-800 focus:dark:bg-gray-50 focus:dark:border-violet-600"
             />
             <button
               type="button"
-              className="px-4 py-[10px] bg-[#ffe1d2] rounded-r-md border-l border-gray-300 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-600"
+              className="px-4 py-[10px] bg-[#f139ef] hover:bg-[#FB26AF] rounded-r-md border-l border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-600 transition-all duration-300"
             >
-              <CiSearch className="text-[#f57224] text-xl md:text-2xl" />
+              <CiSearch className="text-white  text-xl md:text-2xl" />
             </button>
           </div>
-        </div> */}
+        </div>
 
         {/* Right Section */}
         <div className="hidden md:flex items-center space-x-5">
-          <Link to="/login" className="btn btn-warning">
+          <Link to="/login" className="px-4 py-[10px] bg-[#f139ef] hover:bg-[#FB26AF] rounded text-white border-l border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-600 transition-all duration-300">
             Login
           </Link>
         </div>
