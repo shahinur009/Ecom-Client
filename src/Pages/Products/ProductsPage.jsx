@@ -27,7 +27,7 @@ function ProductsPage() {
     <>
       <div className="border-t border-gray-400 my-6">
         <h3 className="text-xl flex justify-center items-center my-6">
-          <span className="text-red-500 flex mx-auto justify-center text-2xl md:text-5xl">
+          <span className="text-red-500 flex mx-auto font-bold underline cursor-pointer justify-center text-xl md:text-2xl">
             All products
           </span>
         </h3>

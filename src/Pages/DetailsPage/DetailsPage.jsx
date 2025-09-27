@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import {
   FaStar,
@@ -7,6 +7,7 @@ import {
   FaFacebook,
   FaTwitter,
   FaLinkedin,
+  FaTimes,
 } from "react-icons/fa";
 import { FiCreditCard } from "react-icons/fi";
 import Swal from "sweetalert2";
@@ -16,19 +17,22 @@ import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 function DetailsPage() {
+  const [showFullDetails, setShowFullDetails] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
   const { trackEvent } = useGoogleAnalytics();
   const [loading, setLoading] = useState(true);
   const [products, setProducts] = useState(null);
   const { id } = useParams();
   const navigate = useNavigate();
   const [quantity, setQuantity] = useState(1);
-  const [formData, setFormData] = useState({
-    customerName: "",
-    phone: "",
-    address: "",
-    courierFee: "All Bangladesh Courier Fee Free",
-    totalCost: 0,
-  });
+
+  const imageRef = useRef(null);
+
+  useEffect(() => {
+    if (products?.images && products.images.length > 0) {
+      setSelectedImage(products.images[0]);
+    }
+  }, [products]);
 
   // Get product by ID
   const getProductById = async () => {
@@ -37,11 +41,6 @@ function DetailsPage() {
       const res = await axios.get(`http://localhost:5000/show-product/${id}`);
       if (res.status === 200) {
         setProducts(res.data);
-        setFormData((prev) => ({
-          ...prev,
-          totalCost: res.data.price || 0,
-        }));
-
         // Track product view in GA
         trackEvent("view_item", "products", res.data.name, res.data.price);
       } else {
@@ -80,62 +79,35 @@ function DetailsPage() {
     }
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+  const handleAddToCart = () => {
+    if (!products) return;
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+    const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-    const orderData = {
-      customerName: formData.customerName,
-      phone: formData.phone,
-      address: formData.address,
-      productName: products?.name,
-      productPrice: products?.price,
-      quantity: quantity,
-      courierFee: formData.courierFee,
-      totalCost: formData.totalCost,
-      orderDate: new Date(),
-      status: "Pending",
-    };
+    const existingItemIndex = cart.findIndex(
+      (item) => item.id === products._id
+    );
 
-    try {
-      const response = await axios.post(
-        "http://localhost:5000/place-order",
-        orderData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
-
-      if (response.status === 200) {
-        // Track conversion in GA
-        trackEvent("purchase", "ecommerce", products.name, formData.totalCost);
-
-        Swal.fire({
-          title: "Success!",
-          text: "Order submitted! We will contact you shortly.",
-          icon: "success",
-          confirmButtonText: "Okay",
-        });
-        navigate("/");
-      }
-    } catch (error) {
-      console.error("Error placing order:", error);
-      Swal.fire({
-        title: "Error",
-        text: "An error occurred. Please try again.",
-        icon: "error",
-        confirmButtonText: "Close",
+    if (existingItemIndex !== -1) {
+      cart[existingItemIndex].qty += quantity;
+    } else {
+      cart.push({
+        id: products._id,
+        name: products.name,
+        price: products.price,
+        qty: quantity,
+        image: selectedImage,
       });
     }
+
+    localStorage.setItem("cart", JSON.stringify(cart));
+    Swal.fire({
+      icon: "success",
+      title: "Added to Cart",
+      text: `${products.name} has been added to your cart.`,
+      timer: 1500,
+      showConfirmButton: false,
+    });
   };
 
   const handleWhatsAppShare = () => {
@@ -230,21 +202,53 @@ function DetailsPage() {
         <div className="flex flex-col lg:flex-row gap-6 md:gap-8">
           {/* Image Section */}
           <div className="w-full lg:w-1/2">
-            <div className="bg-white rounded-xl shadow-md overflow-hidden">
-              <img
-                src={products?.image}
-                alt={products.name}
-                className="w-full h-auto max-h-[500px] object-contain rounded-xl"
-                onError={(e) => {
-                  e.target.src =
-                    "https://via.placeholder.com/600x600?text=No+Image";
-                }}
-              />
+            <div className="bg-white rounded-xl shadow-md overflow-hidden flex flex-col items-center relative">
+              {selectedImage && (
+                <div className="w-full max-w-md mx-auto">
+                  <img
+                    ref={imageRef}
+                    src={selectedImage}
+                    alt={products.name}
+                    className="w-full h-auto object-contain max-h-96"
+                  />
+                </div>
+              )}
+            </div>
+
+            {/* Thumbnail Gallery */}
+            <div className="flex gap-3 mt-4 overflow-x-auto">
+              {products.images?.map((img, idx) => (
+                <img
+                  key={idx}
+                  src={img}
+                  alt={`Thumbnail ${idx}`}
+                  onClick={() => setSelectedImage(img)}
+                  className={`w-20 h-20 object-cover rounded-lg border-2 cursor-pointer transition 
+            ${selectedImage === img ? "border-indigo-500" : "border-gray-300"}`}
+                />
+              ))}
             </div>
           </div>
 
           {/* Details Section */}
-          <div className="w-full lg:w-1/2">
+          <div className="w-full lg:w-1/2 relative">
+            {/* Magnifier Overlay */}
+            {selectedImage && (
+              <div className="absolute inset-0 z-10 pointer-events-none overflow-hidden rounded-xl">
+                <div className="absolute border-2 border-indigo-400 bg-white bg-opacity-20 rounded-full"></div>
+
+                <div className="absolute left-full ml-4 top-0 w-96 h-96 bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden z-20">
+                  <div className="relative w-full h-full">
+                    <img
+                      src={selectedImage}
+                      alt={`Zoomed ${products.name}`}
+                      className="absolute max-w-none"
+                    />
+                  </div>
+                </div>
+              </div>
+            )}
+
             <div className="space-y-4 md:space-y-6">
               <div>
                 <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-2">
@@ -274,7 +278,21 @@ function DetailsPage() {
                   <h3 className="font-semibold text-gray-900 mb-1 md:mb-2">
                     Details
                   </h3>
-                  <p className="text-gray-700">{products.details}</p>
+                  <p className="text-gray-700">
+                    {showFullDetails
+                      ? products.details
+                      : products.details?.length > 150
+                      ? products.details.substring(0, 150) + "..."
+                      : products.details}
+                    {products.details?.length > 150 && (
+                      <span
+                        onClick={() => setShowFullDetails(!showFullDetails)}
+                        className="text-blue-500 ml-1 cursor-pointer text-sm hover:underline mt-1 transition-all duration-300"
+                      >
+                        {showFullDetails ? "See Less" : "See More"}
+                      </span>
+                    )}
+                  </p>
                 </div>
 
                 <div>
@@ -321,10 +339,10 @@ function DetailsPage() {
                   <FaWhatsapp size={20} /> Contact via WhatsApp
                 </button>
                 <button
-                  onClick={handleSubmit}
+                  onClick={handleAddToCart}
                   className="flex items-center justify-center gap-2 bg-indigo-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-lg hover:bg-indigo-700 transition-colors duration-300 font-medium flex-1"
                 >
-                  <FiCreditCard /> Order Now
+                  <FiCreditCard /> Add to Cart
                 </button>
               </div>
 
@@ -359,107 +377,6 @@ function DetailsPage() {
               </div>
             </div>
           </div>
-        </div>
-
-        {/* Customer Form */}
-        <div className="mt-8 md:mt-12 bg-[#FB26AF] container mx-auto rounded-xl max-w-md shadow-md p-6">
-          <h2 className="text-xl font-bold mb-6 text-center">
-            For Order Fill the Form
-          </h2>
-          <form onSubmit={handleSubmit} className="gap-2">
-            <div className="mb-2">
-              <label className="block text-lg font-medium mb-2">Name</label>
-              <input
-                type="text"
-                name="customerName"
-                value={formData.customerName}
-                onChange={handleInputChange}
-                className="w-full border rounded p-2 text-black"
-                placeholder="Enter your name"
-                required
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-lg font-medium mb-2">Mobile</label>
-              <input
-                type="tel"
-                name="phone"
-                value={formData.phone}
-                onChange={handleInputChange}
-                className="w-full border rounded p-2 text-black"
-                placeholder="Enter your phone number"
-                required
-              />
-            </div>
-            <div className="mb-4 md:col-span-2">
-              <label className="block text-lg font-medium mb-2">District</label>
-              <input
-                name="district"
-                value={formData.address}
-                onChange={handleInputChange}
-                className="w-full border rounded p-2 text-black"
-                placeholder="Enter your district"
-                required
-                rows="3"
-              ></input>
-            </div>
-            <div className="mb-4 md:col-span-2">
-              <label className="block text-lg font-medium mb-2">Upzila</label>
-              <input
-                name="upzila"
-                value={formData.upzila}
-                onChange={handleInputChange}
-                className="w-full border rounded p-2 text-black"
-                placeholder="Enter your upzila"
-                required
-                rows="3"
-              ></input>
-            </div>
-            <div className="mb-4 md:col-span-2">
-              <label className="block text-lg font-medium mb-2">Village</label>
-              <input
-                name="village"
-                value={formData.village}
-                onChange={handleInputChange}
-                className="w-full border rounded p-2 text-black"
-                placeholder="Enter your village"
-                required
-                rows="3"
-              ></input>
-            </div>
-            <div className="mb-4 md:col-span-2">
-              <label className="block text-lg font-medium mb-2">House No</label>
-              <input
-                name="house"
-                value={formData.house}
-                onChange={handleInputChange}
-                className="w-full border rounded p-2 text-black"
-                placeholder="Enter your House No"
-                required
-                rows="3"
-              ></input>
-            </div>
-
-            <div className="mb-4">
-              <label className="block text-lg font-medium mb-2">
-                Total Amount
-              </label>
-              <input
-                type="text"
-                value={`${formData.totalCost} BDT`}
-                className="w-full border rounded p-2 text-black bg-gray-100"
-                readOnly
-              />
-            </div>
-            <div className="md:col-span-2 mt-4">
-              <button
-                type="submit"
-                className="bg-[#dc590d] px-6 py-3 hover:bg-[#703a1b] w-full text-xl text-white font-semibold rounded uppercase"
-              >
-                Order Now
-              </button>
-            </div>
-          </form>
         </div>
       </div>
     </div>

@@ -15,7 +15,10 @@ const AddProduct = () => {
     stock: "",
     price: "",
     brand: "",
-    image: null,
+    category: "",
+    color: "",
+    model: "",
+    images: [], // multiple image support
   });
 
   // Handle form input changes
@@ -24,38 +27,46 @@ const AddProduct = () => {
     setProduct({ ...product, [name]: value });
   };
 
-  // Handle image file change
+  // Handle multiple image file changes
   const handleImageChange = (e) => {
-    setProduct({ ...product, image: e.target.files[0] });
+    setProduct({ ...product, images: [...e.target.files] });
   };
 
-  const { name, details, stock, price, brand } = product;
+  const { name, details, stock, price, brand, category, color, model } =
+    product;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       setLoading(true);
-      // upload image form imgbb
-      const image_url = await imageUpload(product.image);
-      // console.log(image_url);
+
+      // upload multiple images
+      const uploadedImages = await Promise.all(
+        product.images.map((img) => imageUpload(img))
+      );
+
       const sendingData = {
         name,
-        image: image_url,
+        images: uploadedImages, // store array of image URLs
         details,
         stock,
         price,
         brand,
+        category,
+        color,
+        model,
       };
+
       const res = await axios.post(
         "http://localhost:5000/add-product",
         sendingData
       );
-      // console.log(res);
+
       if (res) {
         Swal.fire({
           position: "top-end",
           icon: "success",
-          title: "Product add Successfully",
+          title: "Product added successfully",
           showConfirmButton: false,
           timer: 1500,
         });
@@ -63,7 +74,6 @@ const AddProduct = () => {
         setLoading(false);
         navigate("/dashboard/stock");
       }
-      // error handle
     } catch (error) {
       console.error("Error from add product", error);
       toast.error(error.message);
@@ -81,7 +91,8 @@ const AddProduct = () => {
           Add New Product
         </h2>
         <form onSubmit={handleSubmit}>
-          <div className="''">
+          {/* name */}
+          <div>
             <label className="block text-gray-700">Product Name</label>
             <input
               type="text"
@@ -93,7 +104,8 @@ const AddProduct = () => {
             />
           </div>
 
-          <div className="''">
+          {/* details */}
+          <div>
             <label className="block text-gray-700">Product Details</label>
             <textarea
               name="details"
@@ -104,7 +116,8 @@ const AddProduct = () => {
             />
           </div>
 
-          {/* <div className="''">
+          {/* category */}
+          <div>
             <label className="block text-gray-700">Category</label>
             <input
               type="text"
@@ -112,11 +125,12 @@ const AddProduct = () => {
               value={product.category}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md"
-              required
+              
             />
-          </div> */}
+          </div>
 
-          <div className="''">
+          {/* stock */}
+          <div>
             <label className="block text-gray-700">Stock</label>
             <input
               type="number"
@@ -124,10 +138,12 @@ const AddProduct = () => {
               value={product.stock}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md"
-              required
+              
             />
           </div>
-          {/* <div className="''">
+
+          {/* color */}
+          <div>
             <label className="block text-gray-700">Color</label>
             <input
               type="text"
@@ -135,21 +151,12 @@ const AddProduct = () => {
               value={product.color}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md"
-              required
+              
             />
-          </div> */}
-          {/* <div className="''">
-            <label className="block text-gray-700">Product Code</label>
-            <input
-              type="text"
-              name="code"
-              value={product.code}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
-              required
-            />
-          </div> */}
-          <div className="''">
+          </div>
+
+          {/* brand */}
+          <div>
             <label className="block text-gray-700">Brand</label>
             <input
               type="text"
@@ -157,10 +164,12 @@ const AddProduct = () => {
               value={product.brand}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md"
-              required
+              
             />
           </div>
-          {/* <div className="''">
+
+          {/* model */}
+          <div>
             <label className="block text-gray-700">Model</label>
             <input
               type="text"
@@ -168,11 +177,12 @@ const AddProduct = () => {
               value={product.model}
               onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md"
-              required
+              
             />
-          </div> */}
+          </div>
 
-          <div className="''">
+          {/* price */}
+          <div>
             <label className="block text-gray-700">Price</label>
             <input
               type="number"
@@ -184,18 +194,23 @@ const AddProduct = () => {
             />
           </div>
 
-          <div className="''">
-            <label className="block text-gray-700">Product Image</label>
+          {/* multiple images */}
+          <div>
+            <label className="block text-gray-700">Product Images</label>
             <input
               type="file"
+              multiple
               onChange={handleImageChange}
               className="w-full p-2 border border-gray-300 rounded-md"
               required
             />
           </div>
 
-          <button type="submit" className="w-full bg-[#f57224] text-white p-2">
-            Add Product
+          <button
+            type="submit"
+            className="w-full bg-[#f57224] text-white p-2 mt-4"
+          >
+            {loading ? "Adding..." : "Add Product"}
           </button>
         </form>
       </div>

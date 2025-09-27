@@ -3,6 +3,7 @@ import bg from "../../../../public/Login-background.jpg";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import axios from "axios";
+import { FaEdit, FaRegTrashAlt } from "react-icons/fa";
 
 const ProductsStock = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -133,10 +134,12 @@ const ProductsStock = () => {
                     <th className="px-4 py-3.5 text-sm font-normal text-left text-gray-500 dark:text-gray-400">
                       Product Name
                     </th>
-                    {/* <th className="px-4 py-3.5 text-sm font-normal text-left text-gray-500 dark:text-gray-400">
+                    <th className="px-4 py-3.5 text-sm font-normal text-left text-gray-500 dark:text-gray-400">
                       Category
-                    </th> */}
-                    <th></th>
+                    </th>
+                    <th className="px-4 py-3.5 text-sm font-normal text-left text-gray-500 dark:text-gray-400">
+                      Price
+                    </th>
                     <th className="px-4 py-3.5 text-sm font-normal text-left text-gray-500 dark:text-gray-400">
                       Stock
                     </th>
@@ -158,29 +161,36 @@ const ProductsStock = () => {
                         <td className="px-4 py-4 text-sm font-medium text-gray-700 dark:text-gray-200 whitespace-nowrap">
                           {index + 1}
                         </td>
-                        <td className="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
-                          {product.name}
+                        <td className="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap truncate">
+                          {product.name?.length > 30
+                            ? product.name.substring(0, 30) + "..."
+                            : product.name}
                         </td>
+
                         <td className="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
                           {product.category}
                         </td>
                         <td className="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
+                          {product.price}
+                        </td>
+                        <td className="px-4 py-4 text-sm text-gray-500 dark:text-gray-300 whitespace-nowrap">
                           {product.stock}
                         </td>
+
                         <div className="flex justify-center gap-4 items-center">
                           <Link
                             to={`/dashboard/update/${product._id}`}
-                            className="btn btn-secondary"
+                            className="text-sm text-[#74CDF5] mt-5"
                           >
-                            Update
+                            <FaEdit />
                           </Link>
-                          <button
+                          <p
                             type="button"
-                            className="btn btn-error"
+                            className="text-sm text-red-400 flex flex-col justify-center items-center mt-5"
                             onClick={() => handleDelete(product._id)}
                           >
-                            Delete
-                          </button>
+                            <FaRegTrashAlt />
+                          </p>
                         </div>
                       </tr>
                     ))

@@ -18,6 +18,7 @@ import AddGallery from "../Dashboard/Pages/GalleryDashboard/AddGallery";
 import AdminGallery from "../Dashboard/Pages/GalleryDashboard/AdminGallery";
 import AddVideo from "../Dashboard/Pages/VideosDashboard/AddVideo";
 import AdminVideo from "../Dashboard/Pages/VideosDashboard/AdminVideo";
+import Checkout from "../Pages/CheckOut/CheckOut";
 
 export const router = createBrowserRouter([
   {
@@ -36,6 +37,10 @@ export const router = createBrowserRouter([
       {
         path: "/details/:id",
         element: <DetailsPage />,
+      },
+      {
+        path: "/checkout", 
+        element: <Checkout />,
       },
     ],
   },

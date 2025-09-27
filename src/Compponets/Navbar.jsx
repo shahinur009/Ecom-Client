@@ -5,16 +5,16 @@ import { PiShoppingCartSimpleBold } from "react-icons/pi";
 import { FaBars } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
-function Navbar() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false); 
+function Navbar({ cartCount }) {
+  // 🔹 cartCount prop নিলাম
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
     <>
-      <div className="flex bg-[#74CDF5] items-center container mx-auto justify-between p-1 fixed z-50 right-0 left-0 h-20 md:h-20">
+      <div className="flex bg-[#74CDF5] items-center container mx-auto justify-between p-1 fixed z-50 right-0 left-0 top-0 h-20 md:h-20">
         {/* Logo Section */}
         <Link to="/" className="flex items-center">
           <img src={logo} alt="logo" className="w-40 h-24" />
-          
         </Link>
 
         {/* Search Bar Section */}
@@ -22,23 +22,30 @@ function Navbar() {
           <div className="relative flex items-center w-full">
             <input
               type="search"
-              name="Search"
               placeholder="Search........"
-              className="w-full py-3 px-3 text-sm rounded-l-md focus:outline-none dark:bg-gray-100 dark:text-gray-800 focus:dark:bg-gray-50 focus:dark:border-violet-600"
+              className="w-full py-3 px-3 text-sm rounded-l-md focus:outline-none"
             />
             <button
               type="button"
-              className="px-4 py-[10px] bg-[#f139ef] hover:bg-[#FB26AF] rounded-r-md border-l border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-600 transition-all duration-300"
+              className="px-4 py-[10px] bg-[#f139ef] hover:bg-[#FB26AF] rounded-r-md border-l border-gray-300 transition-all duration-300"
             >
-              <CiSearch className="text-white  text-xl md:text-2xl" />
+              <CiSearch className="text-white text-xl md:text-2xl" />
             </button>
           </div>
         </div>
 
         {/* Right Section */}
         <div className="hidden md:flex items-center space-x-5">
-          <Link to="/login" className="px-4 py-[10px] bg-[#f139ef] hover:bg-[#FB26AF] rounded text-white border-l border-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-violet-600 transition-all duration-300">
-            Login
+          <Link
+            to="/checkout"
+            className="relative flex items-center text-white"
+          >
+            <PiShoppingCartSimpleBold className="text-3xl text-white" />
+            {cartCount > 0 && (
+              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                {cartCount}
+              </span>
+            )}
           </Link>
         </div>
 
@@ -56,11 +63,16 @@ function Navbar() {
           <ul className="flex flex-col items-start p-4 space-y-2">
             <li>
               <Link
-                to="/add-card"
-                className="flex items-center text-gray-800 hover:text-[#dc590d] space-x-2"
+                to="/checkout"
+                className="flex items-center text-gray-800 hover:text-[#dc590d] space-x-2 relative"
               >
                 <PiShoppingCartSimpleBold className="text-[#dc590d] text-2xl" />
                 <span>Add to Cart</span>
+                {cartCount > 0 && (
+                  <span className="ml-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+                    {cartCount}
+                  </span>
+                )}
               </Link>
             </li>
           </ul>

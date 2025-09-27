@@ -1,17 +1,19 @@
 {
-  "name": "sweetpencil",
+  "name": "rabbayzones",
   "private": true,
   "version": "0.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "react-scripts build && react-snap",
+    "build": "vite build && react-snap",
     "lint": "eslint .",
     "preview": "vite preview"
   },
   "dependencies": {
     "@babel/runtime": "^7.26.7",
+    "@bangladeshi/bangladesh-address": "^1.0.5",
     "axios": "^1.7.9",
+    "bangladesh-geocode": "^1.0.0",
     "chart.js": "^4.4.8",
     "firebase": "^11.3.0",
     "react": "^18.3.1",
