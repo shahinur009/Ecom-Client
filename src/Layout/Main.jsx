@@ -1,14 +1,19 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Outlet } from "react-router-dom";
 import Navbar from "../Compponets/Navbar";
 import Footer from "../Compponets/Footer";
 import ReactWhatsapp from "react-whatsapp";
 import { Helmet } from "react-helmet-async";
 import WhatsAppButton from "../Compponets/WhatsAppButton ";
-import { CartContext } from "../Utilities/CartContext";
+import { CartContext } from "../Pages/Utilities/cartContext";
+import { ToastContainer } from "react-toastify";
 
 function Main() {
   const [cart, setCart] = useState([]);
+  useEffect(() => {
+    const savedCart = JSON.parse(localStorage.getItem("cart")) || [];
+    setCart(savedCart);
+  }, []);
   return (
     <>
       <CartContext.Provider value={{ cart, setCart }}>
@@ -78,6 +83,7 @@ function Main() {
           <Outlet />
         </main>
         <Footer />
+        <ToastContainer position="top-right" autoClose={2000} />
       </CartContext.Provider>
     </>
   );

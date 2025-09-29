@@ -1,10 +1,14 @@
 import { useState } from "react";
 import bg from "../../../../public/Login-background.jpg";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import Swal from "sweetalert2";
 import { imageUpload } from "../../../Utilities/Utilities";
 import { useNavigate } from "react-router-dom";
+import { TbTruckLoading } from "react-icons/tb";
+
+const categories = ["New Born", "Baby Boy", "Baby Girl", "Toys"];
 
 const AddProduct = () => {
   const [loading, setLoading] = useState(false);
@@ -18,16 +22,14 @@ const AddProduct = () => {
     category: "",
     color: "",
     model: "",
-    images: [], // multiple image support
+    images: [],
   });
 
-  // Handle form input changes
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProduct({ ...product, [name]: value });
   };
 
-  // Handle multiple image file changes
   const handleImageChange = (e) => {
     setProduct({ ...product, images: [...e.target.files] });
   };
@@ -40,14 +42,13 @@ const AddProduct = () => {
     try {
       setLoading(true);
 
-      // upload multiple images
       const uploadedImages = await Promise.all(
         product.images.map((img) => imageUpload(img))
       );
 
       const sendingData = {
         name,
-        images: uploadedImages, // store array of image URLs
+        images: uploadedImages,
         details,
         stock,
         price,
@@ -84,26 +85,120 @@ const AddProduct = () => {
   return (
     <div
       style={{ backgroundImage: `url(${bg})` }}
-      className="bg-cover bg-center min-h-screen w-full mx-auto bg-white p-6 flex rounded-lg shadow-md items-center"
+      className="bg-cover container bg-center min-h-screen w-full mx-auto bg-white p-6 flex rounded-lg shadow-md items-center"
     >
-      <div className="w-[50%] mx-auto ">
-        <h2 className="md:text-3xl text-md font-extrabold mb-6 text-center">
+      <ToastContainer position="top-right" autoClose={2000} />
+      <div className="max-w-xl mx-auto border md:p-5 rounded-xl shadow-2xl">
+        <h2 className="md:text-xl text-lg font-extrabold mb-6 text-center">
           Add New Product
         </h2>
         <form onSubmit={handleSubmit}>
-          {/* name */}
-          <div>
-            <label className="block text-gray-700">Product Name</label>
-            <input
-              type="text"
-              name="name"
-              value={product.name}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
-              required
-            />
-          </div>
+          <div className="grid grid-cols-1 text-black md:grid-cols-2 justify-center items-center gap-4">
+            {/* name */}
+            <div>
+              <label className="block text-gray-700">Product Name</label>
+              <input
+                type="text"
+                name="name"
+                value={product.name}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded-md"
+                required
+              />
+            </div>
 
+            {/* category dropdown */}
+            <div>
+              <label className="block text-gray-700">Category</label>
+              <select
+                name="category"
+                value={product.category}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded-md"
+                required
+              >
+                <option value="">Select Category</option>
+                {categories.map((cat, index) => (
+                  <option key={index} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* stock */}
+            <div>
+              <label className="block text-gray-700">Stock</label>
+              <input
+                type="number"
+                name="stock"
+                value={product.stock}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded-md"
+              />
+            </div>
+
+            {/* color */}
+            <div>
+              <label className="block text-gray-700">Color</label>
+              <input
+                type="text"
+                name="color"
+                value={product.color}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded-md"
+              />
+            </div>
+
+            {/* brand */}
+            <div>
+              <label className="block text-gray-700">Brand</label>
+              <input
+                type="text"
+                name="brand"
+                value={product.brand}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded-md"
+              />
+            </div>
+
+            {/* model */}
+            <div>
+              <label className="block text-gray-700">Model</label>
+              <input
+                type="text"
+                name="model"
+                value={product.model}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded-md"
+              />
+            </div>
+
+            {/* price */}
+            <div>
+              <label className="block text-gray-700">Price</label>
+              <input
+                type="number"
+                name="price"
+                value={product.price}
+                onChange={handleChange}
+                className="w-full p-2 border border-gray-300 rounded-md"
+                required
+              />
+            </div>
+
+            {/* multiple images */}
+            <div>
+              <label className="block text-gray-700">Product Images</label>
+              <input
+                type="file"
+                multiple
+                onChange={handleImageChange}
+                className="w-full p-2 border border-gray-300 rounded-md"
+                required
+              />
+            </div>
+          </div>
           {/* details */}
           <div>
             <label className="block text-gray-700">Product Details</label>
@@ -111,107 +206,22 @@ const AddProduct = () => {
               name="details"
               value={product.details}
               onChange={handleChange}
-              className="w-full p-2 border resize-none border-gray-300 rounded-md"
-              required
-            />
-          </div>
-
-          {/* category */}
-          <div>
-            <label className="block text-gray-700">Category</label>
-            <input
-              type="text"
-              name="category"
-              value={product.category}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
-              
-            />
-          </div>
-
-          {/* stock */}
-          <div>
-            <label className="block text-gray-700">Stock</label>
-            <input
-              type="number"
-              name="stock"
-              value={product.stock}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
-              
-            />
-          </div>
-
-          {/* color */}
-          <div>
-            <label className="block text-gray-700">Color</label>
-            <input
-              type="text"
-              name="color"
-              value={product.color}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
-              
-            />
-          </div>
-
-          {/* brand */}
-          <div>
-            <label className="block text-gray-700">Brand</label>
-            <input
-              type="text"
-              name="brand"
-              value={product.brand}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
-              
-            />
-          </div>
-
-          {/* model */}
-          <div>
-            <label className="block text-gray-700">Model</label>
-            <input
-              type="text"
-              name="model"
-              value={product.model}
-              onChange={handleChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
-              
-            />
-          </div>
-
-          {/* price */}
-          <div>
-            <label className="block text-gray-700">Price</label>
-            <input
-              type="number"
-              name="price"
-              value={product.price}
-              onChange={handleChange}
               className="w-full p-2 border border-gray-300 rounded-md"
               required
             />
           </div>
-
-          {/* multiple images */}
           <div>
-            <label className="block text-gray-700">Product Images</label>
-            <input
-              type="file"
-              multiple
-              onChange={handleImageChange}
-              className="w-full p-2 border border-gray-300 rounded-md"
-              required
-            />
+            <button
+              type="submit"
+              className="w-full bg-[#f57224] text-white p-2 mt-4 rounded-md flex items-center justify-center"
+            >
+              {loading ? (
+                <TbTruckLoading className="animate-spin text-xl" />
+              ) : (
+                "Add Product"
+              )}
+            </button>
           </div>
-
-          <button
-            type="submit"
-            className="w-full bg-[#f57224] text-white p-2 mt-4"
-          >
-            {loading ? "Adding..." : "Add Product"}
-          </button>
         </form>
       </div>
     </div>

@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { CartContext } from "../Utilities/cartContext";
 
-function ProductCard({ item }) {
+function CategoryCard({ item }) {
   const { cart, setCart } = useContext(CartContext);
 
   const firstImage =
@@ -91,4 +91,4 @@ function ProductCard({ item }) {
   );
 }
 
-export default ProductCard;
+export default CategoryCard;

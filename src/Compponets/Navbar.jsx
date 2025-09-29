@@ -6,7 +6,6 @@ import { FaBars } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
 function Navbar({ cartCount }) {
-  // 🔹 cartCount prop নিলাম
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
@@ -42,7 +41,7 @@ function Navbar({ cartCount }) {
           >
             <PiShoppingCartSimpleBold className="text-3xl text-white" />
             {cartCount > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">
+              <span className="absolute -top-2 -right-2 bg-red-500 text-black text-xs font-bold px-2 py-0.5 rounded-full">
                 {cartCount}
               </span>
             )}

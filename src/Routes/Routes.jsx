@@ -19,6 +19,7 @@ import AdminGallery from "../Dashboard/Pages/GalleryDashboard/AdminGallery";
 import AddVideo from "../Dashboard/Pages/VideosDashboard/AddVideo";
 import AdminVideo from "../Dashboard/Pages/VideosDashboard/AdminVideo";
 import Checkout from "../Pages/CheckOut/CheckOut";
+import CategoryPage from "../Pages/CategoryPage/CategoryPage";
 
 export const router = createBrowserRouter([
   {
@@ -39,8 +40,12 @@ export const router = createBrowserRouter([
         element: <DetailsPage />,
       },
       {
-        path: "/checkout", 
+        path: "/checkout",
         element: <Checkout />,
+      },
+      {
+        path: "/categories",
+        element: <CategoryPage />,
       },
     ],
   },

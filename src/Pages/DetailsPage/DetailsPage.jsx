@@ -7,9 +7,9 @@ import {
   FaFacebook,
   FaTwitter,
   FaLinkedin,
-  FaTimes,
 } from "react-icons/fa";
 import { FiCreditCard } from "react-icons/fi";
+import { TbCoinTaka } from "react-icons/tb";
 import Swal from "sweetalert2";
 import axios from "axios";
 import useGoogleAnalytics from "../../Hooks/useGoogleAnalytics";
@@ -21,7 +21,7 @@ function DetailsPage() {
   const [selectedImage, setSelectedImage] = useState(null);
   const { trackEvent } = useGoogleAnalytics();
   const [loading, setLoading] = useState(true);
-  const [products, setProducts] = useState(null);
+  const [product, setProduct] = useState(null);
   const { id } = useParams();
   const navigate = useNavigate();
   const [quantity, setQuantity] = useState(1);
@@ -29,10 +29,10 @@ function DetailsPage() {
   const imageRef = useRef(null);
 
   useEffect(() => {
-    if (products?.images && products.images.length > 0) {
-      setSelectedImage(products.images[0]);
+    if (product?.images && product.images.length > 0) {
+      setSelectedImage(product.images[0]);
     }
-  }, [products]);
+  }, [product]);
 
   // Get product by ID
   const getProductById = async () => {
@@ -40,78 +40,99 @@ function DetailsPage() {
       setLoading(true);
       const res = await axios.get(`http://localhost:5000/show-product/${id}`);
       if (res.status === 200) {
-        setProducts(res.data);
+        setProduct(res.data);
         // Track product view in GA
         trackEvent("view_item", "products", res.data.name, res.data.price);
       } else {
-        setProducts(null);
+        setProduct(null);
       }
     } catch (error) {
       console.error("Error fetching product:", error);
-      setProducts(null);
+      setProduct(null);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    getProductById();
+    if (id) {
+      getProductById();
+    }
   }, [id]);
 
   const incrementQuantity = () => {
-    const newQuantity = Math.min(quantity + 1, 99);
-    setQuantity(newQuantity);
-    updateTotalCost(newQuantity);
+    setQuantity((prev) => Math.min(prev + 1, 99));
   };
 
   const decrementQuantity = () => {
-    const newQuantity = Math.max(quantity - 1, 1);
-    setQuantity(newQuantity);
-    updateTotalCost(newQuantity);
-  };
-
-  const updateTotalCost = (qty) => {
-    if (products) {
-      setFormData((prev) => ({
-        ...prev,
-        totalCost: qty * (products.price || 0),
-      }));
-    }
+    setQuantity((prev) => Math.max(prev - 1, 1));
   };
 
   const handleAddToCart = () => {
-    if (!products) return;
+    if (!product) return;
 
     const cart = JSON.parse(localStorage.getItem("cart")) || [];
 
-    const existingItemIndex = cart.findIndex(
-      (item) => item.id === products._id
-    );
+    const existingItemIndex = cart.findIndex((item) => item.id === product._id);
 
     if (existingItemIndex !== -1) {
       cart[existingItemIndex].qty += quantity;
     } else {
       cart.push({
-        id: products._id,
-        name: products.name,
-        price: products.price,
+        id: product._id,
+        name: product.name,
+        price: product.price,
         qty: quantity,
-        image: selectedImage,
+        image: selectedImage || (product.images && product.images[0]),
       });
     }
 
     localStorage.setItem("cart", JSON.stringify(cart));
+
     Swal.fire({
       icon: "success",
       title: "Added to Cart",
-      text: `${products.name} has been added to your cart.`,
+      text: `${product.name} has been added to your cart.`,
       timer: 1500,
       showConfirmButton: false,
     });
+
+    // Track add to cart event
+    trackEvent(
+      "add_to_cart",
+      "products",
+      product.name,
+      product.price * quantity
+    );
+  };
+
+  const handleOrderNow = () => {
+    if (!product) return;
+
+    const orderItem = {
+      id: product._id,
+      name: product.name,
+      price: product.price,
+      qty: quantity,
+      image: selectedImage || (product.images && product.images[0]),
+    };
+
+    localStorage.setItem("directOrder", JSON.stringify(orderItem));
+    navigate("/checkout");
+
+    // Track order now event
+    trackEvent(
+      "begin_checkout",
+      "products",
+      product.name,
+      product.price * quantity
+    );
   };
 
   const handleWhatsAppShare = () => {
-    const message = `I'm interested in this product: ${products.name}\nPrice: ${products.price} BDT\n\n${window.location.href}`;
+    if (!product) return;
+
+    const message = `I'm interested in this product: ${product.name}\nPrice: ${product.price} BDT\n\n${window.location.href}`;
     const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, "_blank");
   };
@@ -140,7 +161,7 @@ function DetailsPage() {
     window.open(
       `https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(
         window.location.href
-      )}&title=${encodeURIComponent(products.name)}`,
+      )}&title=${encodeURIComponent(product?.name || "Product")}`,
       "pop",
       "width=600,height=500"
     );
@@ -165,7 +186,7 @@ function DetailsPage() {
     );
   }
 
-  if (!products) {
+  if (!product) {
     return (
       <div className="container mx-auto px-4 py-24 text-center">
         <div className="bg-white rounded-xl shadow-md p-8 max-w-md mx-auto">
@@ -178,7 +199,7 @@ function DetailsPage() {
           </p>
           <button
             onClick={() => navigate(-1)}
-            className="flex items-center justify-center gap-2 bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 transition-colors duration-300 font-medium mx-auto"
+            className="flex items-center justify-center gap-2 bg-[#FB26AF] text-white px-6 py-3 rounded-lg hover:bg-[#74CDF5] transition-colors duration-300 font-medium mx-auto"
           >
             <FaArrowLeft /> Back to Shop
           </button>
@@ -193,7 +214,7 @@ function DetailsPage() {
         {/* Back Button */}
         <button
           onClick={() => navigate(-1)}
-          className="flex items-center gap-2 text-indigo-600 hover:text-indigo-800 mb-6 transition-colors duration-200"
+          className="flex items-center gap-2 text-[#FB26AF] hover:text-[#74CDF5] mb-6 transition-colors duration-200"
         >
           <FaArrowLeft /> Back
         </button>
@@ -208,7 +229,7 @@ function DetailsPage() {
                   <img
                     ref={imageRef}
                     src={selectedImage}
-                    alt={products.name}
+                    alt={product.name}
                     className="w-full h-auto object-contain max-h-96"
                   />
                 </div>
@@ -216,46 +237,35 @@ function DetailsPage() {
             </div>
 
             {/* Thumbnail Gallery */}
-            <div className="flex gap-3 mt-4 overflow-x-auto">
-              {products.images?.map((img, idx) => (
-                <img
-                  key={idx}
-                  src={img}
-                  alt={`Thumbnail ${idx}`}
-                  onClick={() => setSelectedImage(img)}
-                  className={`w-20 h-20 object-cover rounded-lg border-2 cursor-pointer transition 
-            ${selectedImage === img ? "border-indigo-500" : "border-gray-300"}`}
-                />
-              ))}
-            </div>
+            {product.images && product.images.length > 1 && (
+              <div className="flex gap-3 mt-4 overflow-x-auto py-2">
+                {product.images.map((img, idx) => (
+                  <img
+                    key={idx}
+                    src={img}
+                    alt={`${product.name} ${idx + 1}`}
+                    onClick={() => setSelectedImage(img)}
+                    className={`w-20 h-20 object-cover rounded-lg border-2 cursor-pointer transition 
+                      ${
+                        selectedImage === img
+                          ? "border-[#FB26AF]"
+                          : "border-gray-300"
+                      }`}
+                  />
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Details Section */}
-          <div className="w-full lg:w-1/2 relative">
-            {/* Magnifier Overlay */}
-            {selectedImage && (
-              <div className="absolute inset-0 z-10 pointer-events-none overflow-hidden rounded-xl">
-                <div className="absolute border-2 border-indigo-400 bg-white bg-opacity-20 rounded-full"></div>
-
-                <div className="absolute left-full ml-4 top-0 w-96 h-96 bg-white border border-gray-200 rounded-lg shadow-xl overflow-hidden z-20">
-                  <div className="relative w-full h-full">
-                    <img
-                      src={selectedImage}
-                      alt={`Zoomed ${products.name}`}
-                      className="absolute max-w-none"
-                    />
-                  </div>
-                </div>
-              </div>
-            )}
-
+          <div className="w-full lg:w-1/2">
             <div className="space-y-4 md:space-y-6">
               <div>
                 <h1 className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 mb-2">
-                  {products.name}
+                  {product.name}
                 </h1>
                 <div className="flex items-center gap-1 mb-4">
-                  {[...Array(4)].map((_, i) => (
+                  {[...Array(5)].map((_, i) => (
                     <FaStar key={i} className="text-yellow-500" />
                   ))}
                   <span className="text-gray-500 text-sm ml-1">
@@ -269,45 +279,61 @@ function DetailsPage() {
                   <h3 className="font-semibold text-gray-900 mb-1 md:mb-2">
                     Price
                   </h3>
-                  <p className="text-xl md:text-2xl font-bold text-indigo-600">
-                    {products.price} BDT
+                  <p className="text-xl md:text-2xl font-bold text-[#FB26AF] flex items-center">
+                    <TbCoinTaka className="inline mr-1" />
+                    {product.price}
                   </p>
                 </div>
 
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-1 md:mb-2">
-                    Details
-                  </h3>
-                  <p className="text-gray-700">
-                    {showFullDetails
-                      ? products.details
-                      : products.details?.length > 150
-                      ? products.details.substring(0, 150) + "..."
-                      : products.details}
-                    {products.details?.length > 150 && (
-                      <span
-                        onClick={() => setShowFullDetails(!showFullDetails)}
-                        className="text-blue-500 ml-1 cursor-pointer text-sm hover:underline mt-1 transition-all duration-300"
-                      >
-                        {showFullDetails ? "See Less" : "See More"}
-                      </span>
-                    )}
-                  </p>
-                </div>
+                {product.details && (
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-1 md:mb-2">
+                      Details
+                    </h3>
+                    <p className="text-gray-700">
+                      {showFullDetails
+                        ? product.details
+                        : product.details.length > 150
+                        ? product.details.substring(0, 150) + "..."
+                        : product.details}
+                      {product.details.length > 150 && (
+                        <span
+                          onClick={() => setShowFullDetails(!showFullDetails)}
+                          className="text-[#74CDF5] ml-1 cursor-pointer text-sm hover:underline mt-1 transition-all duration-300"
+                        >
+                          {showFullDetails ? "See Less" : "See More"}
+                        </span>
+                      )}
+                    </p>
+                  </div>
+                )}
 
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-1 md:mb-2">
-                    Brand
-                  </h3>
-                  <p className="text-gray-700">{products.brand || "Unknown"}</p>
-                </div>
+                {product.category && (
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-1 md:mb-2">
+                      Category
+                    </h3>
+                    <p className="text-gray-700">{product.category}</p>
+                  </div>
+                )}
 
-                <div>
-                  <h3 className="font-semibold text-gray-900 mb-1 md:mb-2">
-                    Stock
-                  </h3>
-                  <p className="text-gray-700">{products.stock}</p>
-                </div>
+                {product.brand && (
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-1 md:mb-2">
+                      Brand
+                    </h3>
+                    <p className="text-gray-700">{product.brand}</p>
+                  </div>
+                )}
+
+                {product.stock && (
+                  <div>
+                    <h3 className="font-semibold text-gray-900 mb-1 md:mb-2">
+                      Stock
+                    </h3>
+                    <p className="text-gray-700">{product.stock}</p>
+                  </div>
+                )}
 
                 <div className="flex items-center gap-3 md:gap-4">
                   <h3 className="font-semibold text-gray-900">Quantity:</h3>
@@ -329,6 +355,17 @@ function DetailsPage() {
                     </button>
                   </div>
                 </div>
+
+                {/* Total Price */}
+                <div className="bg-[#74CDF5] bg-opacity-20 p-3 rounded-lg">
+                  <h3 className="font-semibold text-gray-900 mb-1">
+                    Total Price
+                  </h3>
+                  <p className="text-lg font-bold text-[#FB26AF] flex items-center">
+                    <TbCoinTaka className="inline mr-1" />
+                    {product.price * quantity}
+                  </p>
+                </div>
               </div>
 
               <div className="flex flex-col sm:flex-row gap-3 md:gap-4 pt-3 md:pt-4">
@@ -339,8 +376,17 @@ function DetailsPage() {
                   <FaWhatsapp size={20} /> Contact via WhatsApp
                 </button>
                 <button
+                  onClick={handleOrderNow}
+                  className="flex items-center justify-center gap-2 bg-[#FB26AF] text-white px-4 md:px-6 py-2 md:py-3 rounded-lg hover:bg-[#74CDF5] transition-colors duration-300 font-medium flex-1"
+                >
+                  <FiCreditCard /> Order Now
+                </button>
+              </div>
+
+              <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
+                <button
                   onClick={handleAddToCart}
-                  className="flex items-center justify-center gap-2 bg-indigo-600 text-white px-4 md:px-6 py-2 md:py-3 rounded-lg hover:bg-indigo-700 transition-colors duration-300 font-medium flex-1"
+                  className="flex items-center justify-center gap-2 bg-[#74CDF5] text-white px-4 md:px-6 py-2 md:py-3 rounded-lg hover:bg-[#FB26AF] transition-colors duration-300 font-medium flex-1"
                 >
                   <FiCreditCard /> Add to Cart
                 </button>

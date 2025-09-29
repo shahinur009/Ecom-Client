@@ -1,8 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import axios from "axios";
+import { CartContext } from "../Utilities/cartContext";
 
 function Checkout() {
-  const [cart, setCart] = useState([]);
+  const { cart, setCart } = useContext(CartContext);
   const [expandedItems, setExpandedItems] = useState({});
   const [loading, setLoading] = useState(false);
   const [divisions, setDivisions] = useState([]);
@@ -133,7 +134,6 @@ function Checkout() {
   //....Calculate subtotal...................
   const subTotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
 
-  
   //....Submit order.........................
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -338,7 +338,10 @@ function Checkout() {
                       : truncateText(item.name, 6);
 
                     return (
-                      <tr key={item.id} className="border-b hover:bg-gray-50">
+                      <tr
+                        key={`${item.id}-${index}`}
+                        className="border-b hover:bg-gray-50"
+                      >
                         <td className="p-3 text-center">
                           <button
                             onClick={() => removeFromCart(item.id)}

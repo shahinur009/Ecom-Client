@@ -26,7 +26,7 @@
     "react-loading-skeleton": "^3.5.0",
     "react-router-dom": "^7.1.1",
     "react-snap": "^1.23.0",
-    "react-toastify": "^11.0.3",
+    "react-toastify": "^11.0.5",
     "react-whatsapp": "^0.3.0",
     "sweetalert2": "^11.16.0",
     "swiper": "^11.2.1"
