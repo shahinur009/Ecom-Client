@@ -44,7 +44,7 @@ function CategoryCard({ item }) {
 
   return (
     <div className="shadow border-2 transform transition-transform duration-300 hover:scale-105 hover:bg-[#9be8dd] text-black rounded-md m-1 text-center">
-      <Link to={`details/${item._id}`}>
+      <Link to={`/categories/details/${item._id}`}>
         <div className="w-full h-52 overflow-hidden flex justify-center items-center bg-white">
           <img
             src={firstImage}
@@ -74,7 +74,7 @@ function CategoryCard({ item }) {
 
         <div className="flex justify-center items-center gap-2">
           <Link
-            to={`details/${item._id}`}
+            to={`/categories/details/${item._id}`}
             className="bg-[#74CDF5] px-3 py-1 text-xs rounded-2xl hover:bg-[#FB26AF]"
           >
             Order Now

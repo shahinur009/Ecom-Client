@@ -13,7 +13,8 @@ function Category() {
         const uniqueCategories = [
           ...new Set(response.data.map((product) => product.category)),
         ];
-        // console.log("category", response);
+        console.log("response", response.data);
+        console.log("uniqueCategories", uniqueCategories);
         const mappedCategories = uniqueCategories.map((cat) => ({
           name: cat,
           image:

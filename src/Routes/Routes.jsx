@@ -36,7 +36,7 @@ export const router = createBrowserRouter([
         element: <Login />,
       },
       {
-        path: "/details/:id",
+        path: "/categories/details/:id",
         element: <DetailsPage />,
       },
       {
@@ -44,7 +44,7 @@ export const router = createBrowserRouter([
         element: <Checkout />,
       },
       {
-        path: "/categories",
+        path: "/categories/:category",
         element: <CategoryPage />,
       },
     ],

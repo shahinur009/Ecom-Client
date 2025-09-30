@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { IoIosArrowForward } from "react-icons/io";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import CategoryCard from "./CategoryCard";
 
 function CategoryPage() {
-  const { categoryName } = useParams(); // get category from URL
+  const { categoryName } = useParams();
+  const navigate = useNavigate();
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
@@ -57,7 +58,7 @@ function CategoryPage() {
     fetchProducts();
   }, []);
 
-  // Filter products based on selected category and price
+  // Filter products based selected category and price
   useEffect(() => {
     let filtered = products;
 
@@ -72,6 +73,12 @@ function CategoryPage() {
     setFilteredProducts(filtered);
     setCurrentPage(1);
   }, [selectedCategory, priceRange, products]);
+
+  useEffect(() => {
+    if (categoryName) {
+      setSelectedCategory(categoryName);
+    }
+  }, [categoryName]);
 
   // Get category image
   const getCategoryImage = (category) => {
@@ -105,6 +112,7 @@ function CategoryPage() {
 
   const handleCategoryClick = (categoryName) => {
     setSelectedCategory(categoryName);
+    navigate(`/categories/${encodeURIComponent(categoryName)}`);
   };
 
   const handlePriceChange = (e) => {
@@ -114,9 +122,8 @@ function CategoryPage() {
   return (
     <div className="container mx-auto my-24 px-4">
       <div className="flex flex-col lg:flex-row gap-8">
-        {/* Left Sidebar - Categories & Price Filter */}
         <div className="w-full lg:w-1/4 bg-white px-6 rounded-lg shadow-lg">
-          {/* Categories Section */}
+          {/* Categories */}
           <div className="mb-8">
             <h3 className="text-xl font-bold text-gray-800 mb-4 pb-2 border-b-2 border-[#FB26AF]">
               Categories
