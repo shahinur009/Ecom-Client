@@ -5,6 +5,7 @@ import "swiper/css/navigation";
 import { Navigation, Autoplay } from "swiper/modules";
 import { FaChevronCircleLeft, FaChevronCircleRight } from "react-icons/fa";
 import axios from "axios";
+import baseUrl from "../Utilities/baseUrl";
 
 function Banner() {
   const prevRef = useRef(null);
@@ -16,7 +17,7 @@ function Banner() {
   useEffect(() => {
     const fetchBanners = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/get-banner");
+        const response = await axios.get(`${baseUrl}/get-banner`);
         setBanners(response.data);
         // console.log("Banners:", response.data);
       } catch (err) {

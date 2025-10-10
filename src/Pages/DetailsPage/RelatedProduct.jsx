@@ -12,6 +12,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 
 // Import Swiper modules for v11
 import { Navigation, Pagination, Autoplay } from "swiper/modules";
+import baseUrl from "../../Utilities/baseUrl";
 
 function RelatedProduct({ currentProductCategory = "" }) {
   const [products, setProducts] = useState([]);
@@ -25,7 +26,7 @@ function RelatedProduct({ currentProductCategory = "" }) {
   const getProducts = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("http://localhost:5000/show-product");
+      const res = await axios.get(`${baseUrl}/show-product`);
       const allProducts = res.data;
       setProducts(allProducts);
 

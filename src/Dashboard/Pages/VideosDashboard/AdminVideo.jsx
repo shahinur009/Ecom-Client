@@ -2,9 +2,9 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import baseUrl from "../../../Utilities/baseUrl";
 
 function AdminVideo() {
-  const API_URL = import.meta.env.VITE_API_URL || " ";
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(false);
   const [previewVideo, setPreviewVideo] = useState(null);
@@ -13,7 +13,7 @@ function AdminVideo() {
   const getVideos = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`${API_URL}/videos`);
+      const response = await axios.get(`${baseUrl}/videos`);
       setVideos(response.data);
       console.log("video", response.data);
     } catch (error) {
@@ -39,7 +39,7 @@ function AdminVideo() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.delete(`${API_URL}/video-delete/${id}`);
+          await axios.delete(`${baseUrl}/video-delete/${id}`);
           setVideos((previewVideo) =>
             previewVideo.filter((video) => video._id !== id)
           );

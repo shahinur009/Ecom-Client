@@ -1,6 +1,7 @@
 import { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { CartContext } from "../Utilities/cartContext";
+import baseUrl from "../../Utilities/baseUrl";
 
 function Checkout() {
   const { cart, setCart } = useContext(CartContext);
@@ -152,7 +153,7 @@ function Checkout() {
 
     try {
       const { data } = await axios.post(
-        "http://localhost:5000/orders",
+        `${baseUrl}/orders`,
         payload
       );
       if (data.success && data.orderId) {

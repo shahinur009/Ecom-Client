@@ -5,6 +5,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation, Autoplay } from "swiper/modules";
+import baseUrl from "../../../Utilities/baseUrl";
 
 function Videos() {
   const prevRef = useRef(null);
@@ -17,7 +18,7 @@ function Videos() {
     const fetchVideos = async () => {
       setLoading(true);
       try {
-        const response = await axios.get("http://localhost:5000/videos");
+        const response = await axios.get(`${baseUrl}/videos`);
         setVideos(response.data);
         console.log("videos:", response.data);
       } catch (err) {

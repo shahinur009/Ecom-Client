@@ -16,11 +16,9 @@ function Home() {
   return (
     <> 
       <div>
-        <Banner></Banner>
-        
+        <Banner></Banner>        
         <Category></Category>
         <ProductsPage></ProductsPage>
-
         <Rules></Rules>
       </div>
     </>

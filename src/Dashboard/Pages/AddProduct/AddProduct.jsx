@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 import { imageUpload } from "../../../Utilities/Utilities";
 import { useNavigate } from "react-router-dom";
 import { TbTruckLoading } from "react-icons/tb";
+import baseUrl from "../../../Utilities/baseUrl";
 
 const categories = ["New Born", "Baby Boy", "Baby Girl", "Toys"];
 
@@ -58,10 +59,7 @@ const AddProduct = () => {
         model,
       };
 
-      const res = await axios.post(
-        "http://localhost:5000/add-product",
-        sendingData
-      );
+      const res = await axios.post(`${baseUrl}/add-product`, sendingData);
 
       if (res) {
         Swal.fire({

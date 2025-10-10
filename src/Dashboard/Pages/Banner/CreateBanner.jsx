@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import baseUrl from "../../../Utilities/baseUrl";
 
 const CreateBanner = () => {
   const [formData, setFormData] = useState({
@@ -34,10 +35,9 @@ const CreateBanner = () => {
 
       const imageUrl = response.data.data.url;
       setImageURL(imageUrl);
-      const formResponse = await axios.post(
-        "http://localhost:5000/create-banner",
-        { bannerImage: imageUrl }
-      );
+      const formResponse = await axios.post(`${baseUrl}/create-banner`, {
+        bannerImage: imageUrl,
+      });
       Swal.fire({
         title: "Success!",
         text: "Banner uploaded successfully!",

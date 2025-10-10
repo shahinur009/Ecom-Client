@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import baseUrl from "../../../Utilities/baseUrl";
 
 function AddVideo() {
   const [formData, setFormData] = useState({
@@ -33,10 +34,9 @@ function AddVideo() {
 
       const videoUrl = response.data.data.url;
       setImageURL(videoUrl);
-      const formResponse = await axios.post(
-        "http://localhost:5000/create-video",
-        { bannerImage: videoUrl }
-      );
+      const formResponse = await axios.post(`${baseUrl}/create-video`, {
+        bannerImage: videoUrl,
+      });
       Swal.fire({
         title: "Success!",
         text: "video uploaded successfully!",

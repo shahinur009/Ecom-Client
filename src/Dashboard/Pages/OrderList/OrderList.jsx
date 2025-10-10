@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import bg from "../../../../public/Login-background.jpg";
 import axios from "axios";
 import Swal from "sweetalert2";
+import baseUrl from "../../../Utilities/baseUrl";
 
 const OrderList = () => {
   const [orders, setOrders] = useState([]);
@@ -16,13 +17,14 @@ const OrderList = () => {
   const getOrders = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("http://localhost:5000/orders", {
+      const res = await axios.get(`${baseUrl}/orders`, {
         params: {
           status: selectedStatus === "All" ? "" : selectedStatus,
           page: currentPage,
           limit: ordersPerPage,
         },
       });
+      console.log("res", res.data.orders);
       setOrders(res.data.orders);
       setTotalOrders(res.data.totalCount);
       setLoading(false);
@@ -39,7 +41,7 @@ const OrderList = () => {
   const totalPages = Math.ceil(totalOrders / ordersPerPage);
 
   const handleDelete = async (id) => {
-    console.log("Deleting order ID:", id); // Debugging
+    console.log("Deleting order ID:", id);
 
     Swal.fire({
       title: "Are you sure?",
@@ -53,7 +55,7 @@ const OrderList = () => {
       if (result.isConfirmed) {
         try {
           const response = await axios.delete(
-            `http://localhost:5000/orders/${id}`
+            `${baseUrl}/orders/${id}`
           );
 
           console.log("Delete response:", response.data); // Debugging

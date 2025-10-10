@@ -5,6 +5,7 @@ import { FaSpinner } from "react-icons/fa";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useForm } from "react-hook-form";
+import baseUrl from "../../Utilities/baseUrl";
 
 function Register() {
   const { loading, setLoading } = useState(false);
@@ -31,7 +32,7 @@ function Register() {
             name: data.name,
             email: data.email,
           };
-          axios.post("http://localhost:5000/users", userInfo).then((res) => {
+          axios.post(`${baseUrl}/users`, userInfo).then((res) => {
             if (res.data.insertedId) {
               // console.log("user added to database");
 

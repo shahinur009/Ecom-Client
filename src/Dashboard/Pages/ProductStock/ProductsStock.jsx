@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import axios from "axios";
 import { FaEdit, FaRegTrashAlt } from "react-icons/fa";
+import baseUrl from "../../../Utilities/baseUrl";
 
 const ProductsStock = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -19,7 +20,7 @@ const ProductsStock = () => {
   const getProducts = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`http://localhost:5000/stock`, {
+      const res = await axios.get(`${baseUrl}/stock`, {
         params: {
           category: selectedCategory === "All" ? "" : selectedCategory,
           page: currentPage,
@@ -67,7 +68,7 @@ const ProductsStock = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.delete(`http://localhost:5000/delete/${id}`);
+          await axios.delete(`${baseUrl}/delete/${id}`);
           // Remove the deleted product from the local state
           setProducts((prevProducts) =>
             prevProducts.filter((product) => product._id !== id)

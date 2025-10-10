@@ -2,6 +2,7 @@ import axios from "axios";
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import baseUrl from "../../../Utilities/baseUrl";
 
 const AdminBannerHome = () => {
   const [banners, setBanners] = useState([]);
@@ -12,8 +13,8 @@ const AdminBannerHome = () => {
   const getBanners = async () => {
     setLoading(true);
     try {
-      const response = await axios.get("http://localhost:5000/get-banner");
-      setBanners(response.data);
+      const response = await axios.get(`${baseUrl}/get-banner`);
+      setBanners(response.data); 
     } catch (error) {
       console.error("Error fetching banners:", error);
     } finally {
@@ -38,7 +39,7 @@ const AdminBannerHome = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.delete(`http://localhost:5000/banner-delete/${id}`);
+          await axios.delete(`${baseUrl}/banner-delete/${id}`);
           setBanners((prevBanners) =>
             prevBanners.filter((banner) => banner._id !== id)
           );

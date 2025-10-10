@@ -2,6 +2,7 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import baseUrl from "../../../Utilities/baseUrl";
 
 function AdminGallery() {
   const API_URL = import.meta.env.VITE_API_URL || " ";
@@ -13,7 +14,7 @@ function AdminGallery() {
   const getGalleries = async () => {
     setLoading(true);
     try {
-      const response = await axios.get(`http://localhost:5000/gallery`);
+      const response = await axios.get(`${baseUrl}/gallery`);
       setGalleries(response.data);
       console.log("gallery", response.data);
     } catch (error) {
@@ -40,7 +41,7 @@ function AdminGallery() {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.delete(`http://localhost:5000/gallery-delete/${id}`);
+          await axios.delete(`${baseUrl}/gallery-delete/${id}`);
           setGalleries((prevGalleries) =>
             prevGalleries.filter((gallery) => gallery._id !== id)
           );

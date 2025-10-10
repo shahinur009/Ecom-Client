@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import baseUrl from "../../Utilities/baseUrl";
 // import SEO from "../../SEO/SEO";
 
 function ProductsPage() {
@@ -11,7 +12,7 @@ function ProductsPage() {
   const getProducts = async () => {
     try {
       setLoading(true);
-      const res = await axios.get("http://localhost:5000/show-product");
+      const res = await axios.get(`${baseUrl}/show-product`);
       setProducts(res.data);
     } catch (error) {
       console.error("Error fetching products:", error);

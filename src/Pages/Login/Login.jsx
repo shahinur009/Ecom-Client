@@ -5,6 +5,7 @@ import { FaHome, FaSpinner } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import Swal from "sweetalert2";
+import baseUrl from "../../Utilities/baseUrl";
 
 function Login() {
   const [loading, setLoading] = useState(false);
@@ -12,7 +13,7 @@ function Login() {
 
   const signIn = async (email, password) => {
     try {
-      const response = await axios.post("http://localhost:5000/login", {
+      const response = await axios.post(`${baseUrl}/login`, {
         email,
         password,
       });

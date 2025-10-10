@@ -5,6 +5,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router-dom";
 import { imageUpload } from "../../../Utilities/Utilities";
+import baseUrl from "../../../Utilities/baseUrl";
 
 const AddGallery = () => {
   const [loading, setLoading] = useState(false);
@@ -28,8 +29,8 @@ const AddGallery = () => {
 
       // Send to backend with correct key 'bannerImage'
       const res = await axios.post(
-        "http://localhost:5000/create-gallery",
-        { bannerImage: image_url }, // Use 'bannerImage' instead of 'image'
+        `${baseUrl}/create-gallery`,
+        { bannerImage: image_url }, 
         {
           headers: {
             "Content-Type": "application/json",

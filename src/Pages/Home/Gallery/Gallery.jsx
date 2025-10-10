@@ -5,6 +5,7 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import { Navigation, Autoplay } from "swiper/modules";
+import baseUrl from "../../../Utilities/baseUrl";
 
 function Gallery() {
   const prevRef = useRef(null);
@@ -16,7 +17,7 @@ function Gallery() {
   useEffect(() => {
     const fetchBanners = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/gallery");
+        const response = await axios.get(`${baseUrl}/gallery`);
         setGallery(response.data);
         console.log("galleries:", response.data);
       } catch (err) {

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import newborn from "../../public/category/baby_boy.png";
 import { Link } from "react-router-dom";
+import baseUrl from "../Utilities/baseUrl";
 
 function Category() {
   const [categories, setCategories] = useState([]);
@@ -9,60 +9,58 @@ function Category() {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/show-product");
-        const uniqueCategories = [
-          ...new Set(response.data.map((product) => product.category)),
-        ];
-        console.log("response", response.data);
-        console.log("uniqueCategories", uniqueCategories);
-        const mappedCategories = uniqueCategories.map((cat) => ({
+        const { data } = await axios.get(`${baseUrl}/show-product`);
+        const uniqueCategories = [...new Set(data.map((p) => p.category))];
+        const mapped = uniqueCategories.map((cat) => ({
           name: cat,
-          image:
-            cat === "New Born"
-              ? "../../public/category/newborn.png"
-              : cat === "Baby Boy"
-              ? "../../public/category/baby_boy.png"
-              : cat === "Baby Girl"
-              ? "../../public/category/baby_girl.png"
-              : cat === "Toys"
-              ? "../../public/category/toys.png"
-              : "/placeholder.png",
+          image: getCategoryImage(cat),
         }));
 
-        setCategories(mappedCategories);
-      } catch (err) {
-        console.error("Error fetching products:", err);
+        setCategories(mapped);
+      } catch (error) {
+        console.error("Error fetching categories:", error);
       }
     };
 
     fetchCategories();
   }, []);
 
+  const getCategoryImage = (cat) => {
+    switch (cat) {
+      case "New Born":
+        return "/category/newborn.png";
+      case "Baby Boy":
+        return "/category/baby_boy.png";
+      case "Baby Girl":
+        return "/category/baby_girl.png";
+      case "Toys":
+        return "/category/toys.png";
+      default:
+        return "/placeholder.png";
+    }
+  };
+
   return (
-    <div className="container shadow-2xl mx-auto flex justify-center flex-col items-center py-3">
-      <h3 className="text-xl flex justify-center items-center my-6">
-        <span className="text-red-500 flex mx-auto font-bold underline cursor-pointer justify-center text-xl md:text-2xl">
-          All Categories
-        </span>
+    <div className="container shadow-2xl mx-auto flex flex-col items-center py-6">
+      <h3 className="text-xl md:text-2xl font-bold underline text-red-500 my-6">
+        All Categories
       </h3>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 w-full px-3 py-4 justify-items-center items-center">
-        {categories.map((category, index) => (
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 w-full px-3 py-4 justify-items-center">
+        {categories.map((cat, i) => (
           <Link
-            to={`/categories/${encodeURIComponent(category.name)}`}
-            key={index}
-            className="flex flex-col items-center justify-center 
-      p-4 bg-[#FB26AF] border-2 rounded-full shadow-sm 
-      hover:shadow-md transition-shadow h-40 w-40 hover:bg-[#74CDF5]"
+            key={i}
+            to={`/categories/${encodeURIComponent(cat.name)}`}
+            className="flex flex-col items-center justify-center p-4 bg-[#FB26AF] 
+                       border-2 rounded-full shadow-sm hover:shadow-md 
+                       transition-all h-40 w-40 hover:bg-[#74CDF5]"
           >
             <img
+              src={cat.image}
+              alt={cat.name}
               className="mb-2 w-20 h-20 object-contain"
-              src={category.image}
-              alt={category.name}
             />
-            <span className="text-center text-lg font-medium">
-              {category.name}
-            </span>
+            <span className="text-lg font-medium text-center">{cat.name}</span>
           </Link>
         ))}
       </div>

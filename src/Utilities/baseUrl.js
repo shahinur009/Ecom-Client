@@ -1,4 +1,4 @@
-// Production & Development base URL
+//  Development base URL
 const baseUrl =
   process.env.NODE_ENV === "production"
     ? "https://rabsbabyzones.com" 

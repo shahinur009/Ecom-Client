@@ -5,6 +5,7 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import { useNavigate, useParams } from "react-router-dom";
 import { imageUpload } from "../../../Utilities/Utilities";
+import baseUrl from "../../../Utilities/baseUrl";
 
 const Update = () => {
   const [loading, setLoading] = useState(false);
@@ -24,7 +25,7 @@ const Update = () => {
     const fetchProductData = async () => {
       try {
         const response = await axios.get(
-          `http://localhost:5000/singleProduct/${id}`
+          `${baseUrl}/singleProduct/${id}`
         );
         console.log("update", response);
         if (response.data) {
@@ -76,7 +77,7 @@ const Update = () => {
       };
 
       await axios.put(
-        `http://localhost:5000/updateProduct/${id}`,
+        `${baseUrl}/updateProduct/${id}`,
         updatedProduct,
         { headers: { "Content-Type": "application/json" } }
       );

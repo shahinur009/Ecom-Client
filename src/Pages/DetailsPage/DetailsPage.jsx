@@ -16,6 +16,7 @@ import useGoogleAnalytics from "../../Hooks/useGoogleAnalytics";
 import Skeleton from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { CartContext } from "../Utilities/cartContext";
+import baseUrl from "../../Utilities/baseUrl";
 
 function DetailsPage() {
   const [showFullDetails, setShowFullDetails] = useState(false);
@@ -40,7 +41,7 @@ function DetailsPage() {
   const getProductById = async () => {
     try {
       setLoading(true);
-      const res = await axios.get(`http://localhost:5000/show-product/${id}`);
+      const res = await axios.get(`${baseUrl}/show-product/${id}`);
       if (res.status === 200) {
         setProduct(res.data);
         // Track product view in GA

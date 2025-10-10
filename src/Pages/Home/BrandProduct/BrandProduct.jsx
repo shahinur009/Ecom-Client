@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from "react";
 import ProductCard from "../../Register/ProductCard";
 import axios from "axios";
+import baseUrl from "../../../Utilities/baseUrl";
 
 function BrandProduct() {
   const [product, setProduct] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const getProducts = async () => {
-    const res = await axios.get("http://localhost:5000/show-product");
+    const res = await axios.get(`${baseUrl}/show-product`);
     // console.log(res.data)
     setProduct(res?.data);
   };
