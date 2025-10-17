@@ -2,6 +2,6 @@
 const baseUrl =
   process.env.NODE_ENV === "production"
     ? "https://rabsbabyzones.com" 
-    : "http://localhost:5000";
+    : "https://ecom-server-iota.vercel.app";
 
 export default baseUrl;
