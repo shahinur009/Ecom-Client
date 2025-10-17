@@ -92,7 +92,7 @@ export const router = createBrowserRouter([
         element: <AdminVideo />,
       },
       {
-        path: "video/create-video",
+        path: "videos/create-video",
         element: <AddVideo />,
       },
       {

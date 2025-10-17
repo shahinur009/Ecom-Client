@@ -40,7 +40,7 @@ const DashboardLayout = () => {
               <FaArrowRight />
             </Link>
           </li>
-          <li>
+          {/* <li>
             <Link
               to={"/dashboard/gallery"}
               className="flex items-center gap-3 bg-orange-400 rounded-md p-2"
@@ -48,7 +48,7 @@ const DashboardLayout = () => {
               <h1 className="text-md font-bold">Gallery</h1>
               <FaArrowRight />
             </Link>
-          </li>
+          </li> */}
           {/* <li>
             <Link
               to={"/dashboard/videos"}

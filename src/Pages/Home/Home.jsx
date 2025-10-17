@@ -10,16 +10,18 @@ import Testimonial from "./Testomonial/Testomonial";
 import Pricing from "./Pricsing/Pricsing";
 import Rules from "./Rules/Rules";
 import Category from "../../Compponets/Category";
+import Videos from "./Videos/Videos";
 // import SEO from "../../SEO/SEO";
 
 function Home() {
   return (
-    <> 
+    <>
       <div>
-        <Banner></Banner>        
-        <Category></Category>
+        <Banner></Banner>
+        {/* <Category></Category> */}
         <ProductsPage></ProductsPage>
         <Rules></Rules>
+        {/* <Videos /> */}
       </div>
     </>
   );

@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import ProductCard from "./ProductCard";
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
 import baseUrl from "../../Utilities/baseUrl";
+import { FaArrowAltCircleRight } from "react-icons/fa";
+import { Link } from "react-router-dom";
 // import SEO from "../../SEO/SEO";
 
 function ProductsPage() {
@@ -27,11 +29,17 @@ function ProductsPage() {
   return (
     <>
       <div className="border-t border-gray-400 my-6">
-        <h3 className="text-xl flex justify-center items-center my-6">
-          <span className="text-red-500 flex mx-auto font-bold underline cursor-pointer justify-center text-xl md:text-2xl">
+        <div
+          className="my-6 flex justify-center items-center gap-4"
+        >
+          <h3 className="text-red-500 flex mx-auto font-bold underline cursor-pointer text-xl md:text-2xl">
             All products
-          </span>
-        </h3>
+          </h3>
+          <Link to={`/categories/:category`} className="text-red-500 hover:text-black hover:bg-gray-200 text-sm font-semibold flex justify-center items-center gap-2 border rounded-xl px-4 py-2">
+            <span>View All</span>
+            <FaArrowAltCircleRight />
+          </Link>
+        </div>
         {loading ? (
           <p className="text-center text-lg">
             <AiOutlineLoading3Quarters />

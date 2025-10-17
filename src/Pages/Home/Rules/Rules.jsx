@@ -7,7 +7,7 @@ function Rules() {
       className="container mx-auto py-5 flex justify-center items-center gap-4"
       
     >
-      <div className="bg-[#F139EF]/70 py-12 px-6 mt-4 rounded-lg shadow-lg max-w-xl mx-auto backdrop-blur-sm">
+      <div className="bg-slate-200 py-12 px-6 mt-4 rounded-lg shadow-lg max-w-xl mx-auto backdrop-blur-sm">
         <h2 className="text-xl font-bold text-black text-center mb-4">
           📌 অর্ডার করার নিয়ম
         </h2>
@@ -33,7 +33,7 @@ function Rules() {
         </ul>
       </div>
 
-      <div className="bg-[#F139EF]/70 py-8 px-6 mt-4 rounded-lg shadow-lg max-w-xl mx-auto backdrop-blur-sm">
+      <div className="bg-slate-200 py-8 px-6 mt-4 rounded-lg shadow-lg max-w-xl mx-auto backdrop-blur-sm">
         <h2 className="text-3xl font-bold text-black text-center mb-4">
           📌 Order Rules
         </h2>

@@ -84,7 +84,7 @@ function Videos() {
                     rel="noopener noreferrer"
                     className="mt-4 md:px-4 px-1 py-2 bg-yellow-500 text-white font-bold text-sm md:text-lg rounded-md hover:bg-yellow-600 transition"
                   >
-                    অর্ডার করতে কল করুন: +880 1623-503666
+                    অর্ডার করতে কল করুন: +880 1744604009
                   </a>
                 </SwiperSlide>
               ))}
