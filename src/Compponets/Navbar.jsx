@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { CiSearch } from "react-icons/ci";
+// import { CiSearch } from "react-icons/ci";
 import logo from "../../public/logo.png";
 import { PiShoppingCartSimpleBold } from "react-icons/pi";
 import { FaBars } from "react-icons/fa";
@@ -17,7 +17,7 @@ function Navbar({ cartCount }) {
         </Link>
 
         {/* Search Bar Section */}
-        <div className="hidden md:flex items-center flex-grow max-w-sm mx-4 border rounded-md">
+        {/* <div className="hidden md:flex items-center flex-grow max-w-sm mx-4 border rounded-md">
           <div className="relative flex items-center w-full">
             <input
               type="search"
@@ -31,7 +31,7 @@ function Navbar({ cartCount }) {
               <CiSearch className="text-white text-xl md:text-2xl" />
             </button>
           </div>
-        </div>
+        </div> */}
 
         {/* Right Section */}
         <div className="hidden md:flex items-center space-x-5">
