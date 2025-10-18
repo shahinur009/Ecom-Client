@@ -1,7 +1,4 @@
 //  Development base URL
-const baseUrl =
-  process.env.NODE_ENV === "production"
-    ? "https://ecom-server-iota.vercel.app"
-    : "http://localhost:5000";
+const baseUrl = "https://ecom-server-iota.vercel.app/api";
 
 export default baseUrl;
